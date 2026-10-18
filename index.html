@@ -59,7 +59,7 @@ const WORKS = {
     title: "rhythm", ja: "リズム",
     file: "audio/5.amaranthus_rhythm.mp3",
     image: "images/5.amaranthus_rhythm.png",
-    motion: "still",   // 演出なし（完全に静止）
+    motion: "sweep",   // 再生位置に合わせて光の帯が左から右へ
     ground: "#22150F", ink: "#EBDCC3", soft: "#B9A48A", accent: "#C85028",
     palette: [["#C85028",26.1],["#8C1919",25.7],["#5F2D6E",17.1],["#2D1C14",9.5],["#D7781E",9.3],["#3764A5",8.4],["#EBDCC3",3.9]],
     textJa: "色と音のリズムを調整し、重ね合わせました。\n0.25秒間隔に音と間を設計しました。\n一定の歩幅で進むことで、誰かの鮮やかな記憶を遠くから覗くような曲に仕上がっています。",
@@ -68,6 +68,9 @@ const WORKS = {
 };
 const RHYTHM_STEP = 0.25; // rhythm の刻み（秒）
 // scale の光の粒の細かさ（画面の横幅を何マスに分けるか。大きいほど粒が小さい）
+// rhythm の光の帯の幅（画面幅に対する割合 %）と明るさ（0〜1）
+const SWEEP_WIDTH = 6;
+const SWEEP_STRENGTH = 0.55;
 const GLIMMER_COLUMNS = 140;
 // scale の光の粒が1秒間に出る数のめやす（小さいほど少ない）
 const GLIMMER_PER_SECOND = 8;
@@ -110,6 +113,13 @@ const GLIMMER_PER_SECOND = 8;
   .scan {
     position: absolute; left: 0; right: 0; height: 6.25%;
     background: var(--ink);
+    mix-blend-mode: overlay;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sweep {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    background: linear-gradient(to right, transparent, var(--ink) 50%, transparent);
     mix-blend-mode: overlay;
     opacity: 0;
     pointer-events: none;
@@ -236,6 +246,7 @@ const GLIMMER_PER_SECOND = 8;
 <div class="canvas" aria-hidden="true">
   <img id="painting" alt="">
   <div class="scan" id="scan"></div>
+  <div class="sweep" id="sweep"></div>
   <canvas id="fx"></canvas>
   <div class="veil"></div>
 </div>
@@ -391,7 +402,7 @@ if (!W) {
   });
 
   /* ---- 絵の反応（作品ごと） ---- */
-  const img = $("painting"), scan = $("scan"), fx = $("fx"), g = fx.getContext("2d");
+  const img = $("painting"), scan = $("scan"), sweep = $("sweep"), fx = $("fx"), g = fx.getContext("2d");
   let level = 0, mix = 0, stars = [], lastT = 0, spawnAcc = 0;
 
   function sizeFx() {
@@ -448,6 +459,13 @@ if (!W) {
         stars = stars.filter((s) => (s.life -= 0.018) > 0);
         stars.forEach((s) => { g.globalAlpha = Math.sin(s.life * Math.PI) * mix; g.fillRect(s.x, s.y, cell, cell); });
         g.globalAlpha = 1;
+        break;
+      }
+      case "sweep": {       // 再生位置＝光の帯の位置
+        const p = audio.duration ? audio.currentTime / audio.duration : 0;
+        sweep.style.width = SWEEP_WIDTH + "%";
+        sweep.style.left = (p * (100 - SWEEP_WIDTH)) + "%";
+        sweep.style.opacity = (mix * SWEEP_STRENGTH).toFixed(3);
         break;
       }
       case "rhythm": {      // 0.25秒の歩幅：光の帯が一段ずつ降りていく
