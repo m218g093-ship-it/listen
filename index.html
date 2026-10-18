@@ -3,153 +3,348 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>絵を聴く</title>
+<title>Amaranthus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Shippori+Mincho:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- =========================================================
+     作品データ（ここを編集）
+     palette は絵に使われている7色。割合はバーの長さになります。
+     ========================================================= -->
+<script>
+const SERIES = "Amaranthus";
+const WORKS = {
+  1: {
+    title: "pitch", ja: "音高",
+    file: "audio/1.amaranthus_pitch.mp3",
+    image: "images/1.amaranthus_brightness.png",
+    motion: "brightness",
+    ground: "#2A0B0B", ink: "#F1E6DA", soft: "#C9B4A4", accent: "#A59A89",
+    palette: [["#A51D1D",25.6],["#A54221",18.8],["#A56749",16.0],["#A55C17",11.8],["#3764A5",9.9],["#A59A89",9.6],["#8E44A5",8.3]],
+    textJa: "色の明度と音の高さを調整し、重ね合わせました。\n曲は1オクターブの範囲内に音を収めることで、低く柔らかい、光がかすかに残る澄んだ印象に仕上がっています。",
+    textEn: "The brightness of the colors and the pitch of the music were adjusted and layered together.\nBy keeping every note within a single octave, the piece takes on a low, soft, and clear quality, with a faint glimmer of light still lingering."
+  },
+  2: {
+    title: "sound pressure", ja: "音圧",
+    file: "audio/2.amaranthus_sound pressure.mp3",
+    image: "images/2.amaranthus_saturation.png",
+    motion: "saturation",
+    ground: "#1E110A", ink: "#F0DFC6", soft: "#B89878", accent: "#EBB04E",
+    palette: [["#8C2F2F",25.6],["#C86443",18.8],["#2D190F",16.0],["#D78D48",11.8],["#3764A5",9.9],["#EBB04E",9.6],["#5D256E",8.3]],
+    textJa: "色の彩度と音の大きさを調整し、重ね合わせました。\n音の1粒1粒を一定のボリュームに収めています。暗がりに近い、影に沈むような篭った風合いになっています。",
+    textEn: "The saturation of the colors and the volume of the music were adjusted and layered together.\nEach individual note is held at a constant volume, giving the piece a muffled texture, close to darkness, as if sinking into shadow."
+  },
+  3: {
+    title: "original", ja: "",
+    file: "audio/3.amaranthus_original.mp3",
+    image: "images/3.amaranthus_original.png",
+    motion: "breath",
+    ground: "#22150F", ink: "#EBDCC3", soft: "#B9A48A", accent: "#D7781E",
+    palette: [["#8C1919",25.6],["#C85028",18.8],["#2D1C14",16.0],["#D7781E",11.8],["#3764A5",9.9],["#EBDCC3",9.6],["#5F2D6E",8.3]],
+    textJa: "色と曲はどちらも、オリジナルのものを重ね合わせました。\n音高、音圧、音階、そしてリズムが自由に混ざりあいながら、有機的にゆったりとした呼吸を続けています。",
+    textEn: "Both the colors and the music are presented in their original form, layered together.\nPitch, sound pressure, scale, and rhythm mingle freely, sustaining a slow, organic breath."
+  },
+  4: {
+    title: "scale", ja: "音階",
+    file: "audio/4.amaranthus_scale.mp3",
+    image: "images/4.amaranthus_hue.png",
+    motion: "glimmer",
+    ground: "#070B12", ink: "#C3D3EB", soft: "#7F93B2", accent: "#C3D3EB",
+    palette: [["#19488C",25.6],["#2869C8",18.8],["#141E2D",16.0],["#1E6AD7",11.8],["#3764A5",9.9],["#C3D3EB",9.6],["#2D486E",8.3]],
+    textJa: "色の色相と音の音階を調整し、重ね合わせました。\nこの曲はGという一つの音で成り立っています。\n静止した完全な暗闇の中で、静かにきらめくような印象を与えます。",
+    textEn: "The hue of the colors and the scale of the music were adjusted and layered together.\nThis piece is built on a single note: G.\nIt gives the impression of something quietly glimmering within a still, absolute darkness."
+  },
+  5: {
+    title: "rhythm", ja: "リズム",
+    file: "audio/5.amaranthus_rhythm.mp3",
+    image: "images/5.amaranthus_rhythm.png",
+    motion: "rhythm",
+    ground: "#22150F", ink: "#EBDCC3", soft: "#B9A48A", accent: "#C85028",
+    palette: [["#C85028",26.1],["#8C1919",25.7],["#5F2D6E",17.1],["#2D1C14",9.5],["#D7781E",9.3],["#3764A5",8.4],["#EBDCC3",3.9]],
+    textJa: "色と音のリズムを調整し、重ね合わせました。\n0.25秒間隔に音と間を設計しました。\n一定の歩幅で進むことで、誰かの鮮烈な記憶を遠くから覗くような曲に仕上がっています。",
+    textEn: "The rhythm of both the colors and the music was adjusted and layered together.\nNotes and silences were designed at intervals of 0.25 seconds.\nMoving forward at a steady pace, the piece feels like gazing from afar into someone's vivid memory."
+  }
+};
+const RHYTHM_STEP = 0.25; // rhythm の刻み（秒）
+</script>
+
 <style>
   :root {
-    --wall: #D9DBD8;
-    --ink: #1E2430;
-    --mute: #5E6470;
-    --card: #F7F7F5;
-    --accent: #5B3A5E;
-    --line: #B9BCB8;
+    --ground: #1A1210;
+    --ink: #EDE3D6;
+    --soft: #B3A291;
+    --accent: #D7781E;
+    --gutter: 22px;
   }
-  * { box-sizing: border-box; margin: 0; }
-  html, body { min-height: 100%; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--ground); }
   body {
-    background: var(--wall);
+    background: var(--ground);
     color: var(--ink);
-    font-family: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh; min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* ---------- 絵（画面いっぱいに固定） ---------- */
+  .canvas {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden;
+    background: var(--ground);
+  }
+  #painting {
+    position: absolute; inset: -4%;
+    width: 108%; height: 108%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    transform-origin: 50% 45%;
+    will-change: filter, transform;
+  }
+  #fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .scan {
+    position: absolute; left: 0; right: 0; height: 6.25%;
+    background: var(--ink);
+    mix-blend-mode: overlay;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .veil {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to bottom,
+      color-mix(in srgb, var(--ground) 55%, transparent) 0%,
+      transparent 22%,
+      transparent 42%,
+      color-mix(in srgb, var(--ground) 82%, transparent) 72%,
+      var(--ground) 100%);
+  }
+
+  /* ---------- 1画面目 ---------- */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh; min-height: 100svh;
     display: flex; flex-direction: column;
-    padding: calc(env(safe-area-inset-top, 0px) + 28px) 24px calc(env(safe-area-inset-bottom, 0px) + 32px);
+    padding: calc(env(safe-area-inset-top, 0px) + 20px) var(--gutter) 0;
   }
-  .exhibition { font-size: 0.85rem; color: var(--mute); letter-spacing: 0.08em; }
-  .number {
-    font-family: "Zen Old Mincho", serif;
-    font-size: 0.95rem; color: var(--mute);
-    margin-top: auto;
+  .top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: "Bodoni Moda", serif;
+    font-size: 0.95rem; letter-spacing: 0.06em;
+    color: var(--ink);
   }
+  .top .count { font-variant-numeric: lining-nums tabular-nums; color: var(--soft); }
 
-  /* 作品キャプション */
-  .caption {
-    background: var(--card);
-    border-left: 4px solid var(--accent);
-    padding: 24px 22px 26px;
-    margin-top: 10px;
-    width: 100%; max-width: 440px;
+  .stage { margin-top: auto; padding-bottom: 28px; }
+  .title {
+    font-family: "Bodoni Moda", serif;
+    font-weight: 400;
+    font-size: clamp(3.4rem, 19vw, 6.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 96;
   }
-  .work {
-    font-family: "Zen Old Mincho", "Hiragino Mincho ProN", serif;
-    font-weight: 700;
-    font-size: clamp(1.6rem, 7.5vw, 2.2rem);
-    line-height: 1.35;
-    letter-spacing: 0.03em;
+  .title.long { font-size: clamp(2.8rem, 15.5vw, 5.6rem); }
+  .ja {
+    font-size: 1rem; letter-spacing: 0.3em;
+    color: var(--soft);
+    margin-top: 14px;
   }
-  .song { font-size: 0.95rem; color: var(--mute); margin-top: 8px; line-height: 1.6; }
-  .note { font-size: 0.9rem; line-height: 1.85; margin-top: 18px; color: var(--ink); }
-  .note:empty { display: none; }
+  .ja:empty { display: none; }
 
-  /* 再生操作 */
-  .player { margin-top: 26px; display: flex; align-items: center; gap: 16px; }
+  /* ---------- 再生 ---------- */
+  .player { margin-top: 30px; display: flex; align-items: center; gap: 18px; }
   #play {
-    appearance: none; border: 0; cursor: pointer;
-    width: 64px; height: 64px; border-radius: 50%;
-    background: var(--ink); color: var(--card);
-    display: grid; place-items: center; flex: none;
+    appearance: none; border: 1px solid var(--ink); cursor: pointer;
+    width: 60px; height: 60px; border-radius: 50%; flex: none;
+    background: transparent; color: var(--ink);
+    display: grid; place-items: center;
+    transition: background-color .2s, color .2s;
   }
-  #play:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-  #play svg { width: 22px; height: 22px; fill: currentColor; }
-  .track { flex: 1; }
-  .bar {
-    height: 3px; background: var(--line); position: relative; cursor: pointer;
-    touch-action: none;
-  }
-  .bar::before { content: ""; position: absolute; inset: -14px 0; } /* タップ範囲を広げる */
-  #fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--accent); }
-  .time { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--mute); margin-top: 8px; font-variant-numeric: tabular-nums; }
-  .status { font-size: 0.85rem; color: var(--mute); margin-top: 14px; min-height: 1.4em; }
+  #play.on { background: var(--ink); color: var(--ground); }
+  #play:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  #play svg { width: 20px; height: 20px; fill: currentColor; }
+  .track { flex: 1; min-width: 0; }
 
-  .missing .player, .missing .song { display: none; }
+  /* 進行バー＝絵の7色 */
+  .bar {
+    position: relative; height: 10px; display: flex;
+    cursor: pointer; touch-action: none;
+  }
+  .bar::before { content: ""; position: absolute; inset: -14px 0; }
+  .bar span { height: 100%; opacity: 0.32; transition: opacity .15s; }
+  .bar span.lit { opacity: 1; }
+  .bar .head {
+    position: absolute; top: -5px; bottom: -5px; width: 2px;
+    background: var(--ink); left: 0;
+    pointer-events: none;
+  }
+  .bar:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+  .time {
+    display: flex; justify-content: space-between;
+    margin-top: 10px;
+    font-family: "Bodoni Moda", serif; font-size: 0.82rem;
+    color: var(--soft);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .status { margin-top: 14px; font-size: 0.82rem; color: var(--soft); min-height: 1.3em; }
+  .more {
+    display: block; margin-top: 22px;
+    font-size: 0.8rem; color: var(--soft); text-decoration: none;
+    letter-spacing: 0.12em;
+  }
+
+  /* ---------- 解説 ---------- */
+  .notes {
+    position: relative; z-index: 1;
+    background: var(--ground);
+    padding: 36px var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 56px);
+  }
+  .notes p { max-width: 34em; white-space: pre-line; }
+  .note-ja { font-size: 1rem; line-height: 2.05; letter-spacing: 0.04em; }
+  .note-en {
+    margin-top: 28px;
+    font-family: "Bodoni Moda", serif; font-style: italic;
+    font-size: 1rem; line-height: 1.75;
+    color: var(--soft);
+  }
+  .swatches { display: flex; gap: 0; margin-top: 44px; max-width: 34em; }
+  .swatches div { flex: 1; aspect-ratio: 1; }
+  .colophon {
+    margin-top: 14px; max-width: 34em;
+    display: flex; justify-content: space-between;
+    font-family: "Bodoni Moda", serif; font-size: 0.8rem; color: var(--soft);
+  }
+
+  .missing .player, .missing .more, .missing .notes .note-en, .missing .swatches, .missing .colophon { display: none; }
+
+  @media (min-width: 720px) {
+    :root { --gutter: 48px; }
+    .stage, .notes > * { max-width: 560px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #painting { transition: none !important; }
+  }
 </style>
 </head>
 <body>
 
-<!-- ========================================================
-     ここを編集してください
-     QRコードには  https://（公開URL）/?w=1  〜  ?w=5  を入れます
-     ======================================================== -->
-<script>
-const EXHIBITION_TITLE = "絵を聴く";
-const WORKS = {
-1: { title: "明度", song: "音の高さ", file: "audio/1.amaranthus_pitch.mp3", note: "" },
-2: { title: "彩度", song: "音圧", file: "audio/2.amaranthus_sound pressure.mp3", note: "" },
-3: { title: "オリジナル", song: "オリジナル", file: "audio/3.amaranthus_original.mp3", note: "" },
-4: { title: "色相", song: "音階", file: "audio/4.amaranthus_scale.mp3", note: "" },
-5: { title: "リズム", song: "リズム", file: "audio/5.amaranthus_rhythm.mp3", note: "" },
-};
-const LOOP = false; // 曲を繰り返すなら true
-</script>
+<div class="canvas" aria-hidden="true">
+  <img id="painting" alt="">
+  <div class="scan" id="scan"></div>
+  <canvas id="fx"></canvas>
+  <div class="veil"></div>
+</div>
 
-<div class="exhibition" id="exhibition"></div>
-<div class="number" id="number"></div>
+<header class="hero">
+  <div class="top"><span id="series"></span><span class="count" id="count"></span></div>
 
-<main class="caption" id="caption">
-  <h1 class="work" id="work"></h1>
-  <p class="song" id="song"></p>
-  <p class="note" id="note"></p>
+  <section class="stage">
+    <h1 class="title" id="title"></h1>
+    <p class="ja" id="ja"></p>
 
-  <div class="player">
-    <button id="play" type="button" aria-label="再生">
-      <svg id="icon" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>
-    </button>
-    <div class="track">
-      <div class="bar" id="bar" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div id="fill"></div></div>
-      <div class="time"><span id="cur">0:00</span><span id="dur">--:--</span></div>
+    <div class="player">
+      <button id="play" type="button" aria-label="再生">
+        <svg id="icon" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>
+      </button>
+      <div class="track">
+        <div class="bar" id="bar" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"></div>
+        <div class="time"><span id="cur">0:00</span><span id="dur">–:––</span></div>
+      </div>
     </div>
-  </div>
-  <p class="status" id="status">ボタンを押すと曲が流れます</p>
+    <p class="status" id="status">ボタンを押すと曲が流れます</p>
+    <a class="more" href="#notes" id="more">解説を読む ↓</a>
+  </section>
+</header>
+
+<main class="notes" id="notes">
+  <p class="note-ja" id="textJa"></p>
+  <p class="note-en" id="textEn" lang="en"></p>
+  <div class="swatches" id="swatches" aria-hidden="true"></div>
+  <div class="colophon"><span id="colTitle"></span><span>7 colours</span></div>
 </main>
 
 <script>
+const $ = (id) => document.getElementById(id);
 const PLAY = '<path d="M7 4.5v15l13-7.5z"/>';
 const PAUSE = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
-const $ = (id) => document.getElementById(id);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-document.title = EXHIBITION_TITLE;
-$("exhibition").textContent = EXHIBITION_TITLE;
-
+$("series").textContent = SERIES;
 const key = new URLSearchParams(location.search).get("w");
-const work = WORKS[key];
+const W = WORKS[key];
 
-if (!work) {
+if (!W) {
   document.body.classList.add("missing");
-  $("work").textContent = "作品が見つかりません";
-  $("note").textContent = "絵の下にあるQRコードをもう一度読み込んでください。";
+  document.title = SERIES;
+  $("title").textContent = SERIES;
+  $("title").classList.add("long");
   $("status").textContent = "";
+  $("textJa").textContent = "作品が見つかりません。絵の下にあるQRコードをもう一度読み込んでください。";
+  $("painting").src = WORKS[3].image;
 } else {
-  const total = Object.keys(WORKS).length;
-  $("number").textContent = `${key} / ${total}`;
-  $("work").textContent = work.title;
-  $("song").textContent = work.song;
-  $("note").textContent = work.note;
-  document.title = `${work.title}｜${EXHIBITION_TITLE}`;
+  /* ---- 作品ごとの色と文字 ---- */
+  const root = document.documentElement.style;
+  root.setProperty("--ground", W.ground);
+  root.setProperty("--ink", W.ink);
+  root.setProperty("--soft", W.soft);
+  root.setProperty("--accent", W.accent);
+  document.querySelector('meta[name="viewport"]').insertAdjacentHTML("afterend", `<meta name="theme-color" content="${W.ground}">`);
 
-  const audio = new Audio(work.file);
+  document.title = `${W.title}｜${SERIES}`;
+  $("count").textContent = `${key} / ${Object.keys(WORKS).length}`;
+  $("title").textContent = W.title;
+  if (W.title.length > 9) $("title").classList.add("long");
+  $("ja").textContent = W.ja;
+  $("textJa").textContent = W.textJa;
+  $("textEn").textContent = W.textEn;
+  $("colTitle").textContent = `${SERIES} — ${W.title}`;
+  $("painting").src = W.image;
+
+  // 7色の進行バーと色見本
+  const total = W.palette.reduce((s, p) => s + p[1], 0);
+  const bar = $("bar");
+  const segs = [];
+  let acc = 0;
+  W.palette.forEach(([c, v]) => {
+    const s = document.createElement("span");
+    s.style.background = c; s.style.flex = v;
+    s.dataset.end = (acc += v) / total;
+    bar.appendChild(s); segs.push(s);
+    const sw = document.createElement("div");
+    sw.style.background = c; $("swatches").appendChild(sw);
+  });
+  const head = document.createElement("i");
+  head.className = "head"; bar.appendChild(head);
+
+  /* ---- 音 ---- */
+  const audio = new Audio(W.file);
   audio.preload = "auto";
-  audio.loop = LOOP;
+  let ctx = null, analyser = null, buf = null;
 
-  const fmt = (s) => isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}` : "--:--";
-  const setIcon = (playing) => {
-    $("icon").innerHTML = playing ? PAUSE : PLAY;
-    $("play").setAttribute("aria-label", playing ? "一時停止" : "再生");
+  function setupAnalyser() {
+    if (ctx || reduced) return;
+    try {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const src = ctx.createMediaElementSource(audio);
+      analyser = ctx.createAnalyser();
+      analyser.fftSize = 1024;
+      buf = new Uint8Array(analyser.fftSize);
+      src.connect(analyser); analyser.connect(ctx.destination);
+    } catch (e) { ctx = null; analyser = null; }
+  }
+
+  const fmt = (s) => isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}` : "–:––";
+  const setIcon = (on) => {
+    $("icon").innerHTML = on ? PAUSE : PLAY;
+    $("play").classList.toggle("on", on);
+    $("play").setAttribute("aria-label", on ? "一時停止" : "再生");
   };
 
-  $("play").addEventListener("click", () => {
+  $("play").addEventListener("click", async () => {
     if (audio.paused) {
+      setupAnalyser();
+      if (ctx && ctx.state === "suspended") { try { await ctx.resume(); } catch (e) {} }
       $("status").textContent = "読み込んでいます…";
       audio.play().catch(() => { $("status").textContent = "再生できませんでした。もう一度押してください。"; });
     } else {
@@ -162,29 +357,102 @@ if (!work) {
   audio.addEventListener("ended", () => { setIcon(false); $("status").textContent = "曲が終わりました"; });
   audio.addEventListener("loadedmetadata", () => { $("dur").textContent = fmt(audio.duration); });
   audio.addEventListener("error", () => { $("status").textContent = "曲を読み込めませんでした。電波の良い場所でページを再読み込みしてください。"; });
-  audio.addEventListener("timeupdate", () => {
-    const p = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-    $("fill").style.width = p + "%";
-    $("bar").setAttribute("aria-valuenow", Math.round(p));
-    $("cur").textContent = fmt(audio.currentTime);
-  });
 
-  // 再生位置の移動（タップ・ドラッグ）
+  function drawProgress() {
+    const p = audio.duration ? audio.currentTime / audio.duration : 0;
+    head.style.left = `calc(${p * 100}% - 1px)`;
+    segs.forEach((s, i) => {
+      const start = i ? +segs[i - 1].dataset.end : 0;
+      s.classList.toggle("lit", p > start || (p > 0 && i === 0));
+    });
+    bar.setAttribute("aria-valuenow", Math.round(p * 100));
+    $("cur").textContent = fmt(audio.currentTime);
+  }
+  audio.addEventListener("timeupdate", drawProgress);
+
   const seek = (e) => {
     if (!audio.duration) return;
-    const r = $("bar").getBoundingClientRect();
-    const x = Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1);
-    audio.currentTime = x * audio.duration;
+    const r = bar.getBoundingClientRect();
+    audio.currentTime = Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1) * audio.duration;
+    drawProgress();
   };
   let dragging = false;
-  $("bar").addEventListener("pointerdown", (e) => { dragging = true; $("bar").setPointerCapture(e.pointerId); seek(e); });
-  $("bar").addEventListener("pointermove", (e) => { if (dragging) seek(e); });
-  $("bar").addEventListener("pointerup", () => { dragging = false; });
-  $("bar").addEventListener("keydown", (e) => {
+  bar.addEventListener("pointerdown", (e) => { dragging = true; bar.setPointerCapture(e.pointerId); seek(e); });
+  bar.addEventListener("pointermove", (e) => { if (dragging) seek(e); });
+  bar.addEventListener("pointerup", () => { dragging = false; });
+  bar.addEventListener("keydown", (e) => {
     if (!audio.duration) return;
     if (e.key === "ArrowRight") audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
     if (e.key === "ArrowLeft") audio.currentTime = Math.max(audio.currentTime - 5, 0);
   });
+
+  /* ---- 絵の反応（作品ごと） ---- */
+  const img = $("painting"), scan = $("scan"), fx = $("fx"), g = fx.getContext("2d");
+  let level = 0, mix = 0, stars = [];
+
+  function sizeFx() {
+    const d = Math.min(devicePixelRatio || 1, 2);
+    fx.width = innerWidth * d; fx.height = innerHeight * d;
+  }
+  sizeFx(); addEventListener("resize", sizeFx);
+
+  function readLevel(t) {
+    if (analyser && !audio.paused) {
+      analyser.getByteTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) { const v = (buf[i] - 128) / 128; sum += v * v; }
+      return Math.min(Math.sqrt(sum / buf.length) * 3.2, 1);
+    }
+    return audio.paused ? 0 : 0.35 + 0.25 * Math.sin(t / 900); // 解析できないときの代わり
+  }
+
+  function frame(t) {
+    const playing = !audio.paused;
+    mix += ((playing ? 1 : 0) - mix) * 0.04;          // 再生/停止のなめらかな切り替え
+    level += (readLevel(t) - level) * 0.12;
+
+    switch (W.motion) {
+      case "brightness": {  // 光がかすかに残る：音に合わせて明るさが揺れる
+        const b = 1 - mix * (0.42 - level * 0.5);
+        img.style.filter = `brightness(${b.toFixed(3)})`;
+        break;
+      }
+      case "saturation": {  // 影に沈む：彩度が音とともに浮き沈み
+        const s = 1 - mix * (0.75 - level * 0.7);
+        const b = 1 - mix * 0.38;
+        img.style.filter = `saturate(${s.toFixed(3)}) brightness(${b.toFixed(3)})`;
+        break;
+      }
+      case "breath": {      // ゆったりとした呼吸：絵がふくらみ、しぼむ
+        const breath = Math.sin(t / 2600) * 0.5 + 0.5;
+        const sc = 1 + mix * (0.015 + breath * 0.025 + level * 0.012);
+        img.style.transform = `scale(${sc.toFixed(4)})`;
+        break;
+      }
+      case "glimmer": {     // 完全な暗闇できらめく：絵は沈み、光の粒だけが瞬く
+        img.style.filter = `brightness(${(1 - mix * 0.78).toFixed(3)})`;
+        g.clearRect(0, 0, fx.width, fx.height);
+        const cell = Math.ceil(fx.width / 46);
+        if (playing && Math.random() < 0.15 + level * 0.9) {
+          stars.push({ x: Math.floor(Math.random() * 46) * cell, y: Math.floor(Math.random() * (fx.height / cell)) * cell, life: 1 });
+        }
+        g.fillStyle = W.accent;
+        stars = stars.filter((s) => (s.life -= 0.018) > 0);
+        stars.forEach((s) => { g.globalAlpha = Math.sin(s.life * Math.PI) * mix; g.fillRect(s.x, s.y, cell, cell); });
+        g.globalAlpha = 1;
+        break;
+      }
+      case "rhythm": {      // 0.25秒の歩幅：光の帯が一段ずつ降りていく
+        const step = Math.floor(audio.currentTime / RHYTHM_STEP);
+        scan.style.top = `${(step % 16) * 6.25}%`;
+        scan.style.opacity = (mix * 0.55).toFixed(3);
+        img.style.filter = `brightness(${(1 - mix * 0.25).toFixed(3)})`;
+        break;
+      }
+    }
+    if (!reduced) requestAnimationFrame(frame);
+  }
+  if (!reduced) requestAnimationFrame(frame);
 }
 </script>
 </body>
