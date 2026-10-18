@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>絵を聴く</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wall: #D9DBD8;
+    --ink: #1E2430;
+    --mute: #5E6470;
+    --card: #F7F7F5;
+    --accent: #5B3A5E;
+    --line: #B9BCB8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { min-height: 100%; }
+  body {
+    background: var(--wall);
+    color: var(--ink);
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh; min-height: 100dvh;
+    display: flex; flex-direction: column;
+    padding: calc(env(safe-area-inset-top, 0px) + 28px) 24px calc(env(safe-area-inset-bottom, 0px) + 32px);
+  }
+  .exhibition { font-size: 0.85rem; color: var(--mute); letter-spacing: 0.08em; }
+  .number {
+    font-family: "Zen Old Mincho", serif;
+    font-size: 0.95rem; color: var(--mute);
+    margin-top: auto;
+  }
+
+  /* 作品キャプション */
+  .caption {
+    background: var(--card);
+    border-left: 4px solid var(--accent);
+    padding: 24px 22px 26px;
+    margin-top: 10px;
+    width: 100%; max-width: 440px;
+  }
+  .work {
+    font-family: "Zen Old Mincho", "Hiragino Mincho ProN", serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 7.5vw, 2.2rem);
+    line-height: 1.35;
+    letter-spacing: 0.03em;
+  }
+  .song { font-size: 0.95rem; color: var(--mute); margin-top: 8px; line-height: 1.6; }
+  .note { font-size: 0.9rem; line-height: 1.85; margin-top: 18px; color: var(--ink); }
+  .note:empty { display: none; }
+
+  /* 再生操作 */
+  .player { margin-top: 26px; display: flex; align-items: center; gap: 16px; }
+  #play {
+    appearance: none; border: 0; cursor: pointer;
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--ink); color: var(--card);
+    display: grid; place-items: center; flex: none;
+  }
+  #play:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  #play svg { width: 22px; height: 22px; fill: currentColor; }
+  .track { flex: 1; }
+  .bar {
+    height: 3px; background: var(--line); position: relative; cursor: pointer;
+    touch-action: none;
+  }
+  .bar::before { content: ""; position: absolute; inset: -14px 0; } /* タップ範囲を広げる */
+  #fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--accent); }
+  .time { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--mute); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .status { font-size: 0.85rem; color: var(--mute); margin-top: 14px; min-height: 1.4em; }
+
+  .missing .player, .missing .song { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ========================================================
+     ここを編集してください
+     QRコードには  https://（公開URL）/?w=1  〜  ?w=5  を入れます
+     ======================================================== -->
+<script>
+const EXHIBITION_TITLE = "絵を聴く";
+const WORKS = {
+  1: { title: "作品 1", song: "曲名 1", file: "audio/1.mp3", note: "" },
+  2: { title: "作品 2", song: "曲名 2", file: "audio/2.mp3", note: "" },
+  3: { title: "作品 3", song: "曲名 3", file: "audio/3.mp3", note: "" },
+  4: { title: "作品 4", song: "曲名 4", file: "audio/4.mp3", note: "" },
+  5: { title: "作品 5", song: "曲名 5", file: "audio/5.mp3", note: "" },
+};
+const LOOP = false; // 曲を繰り返すなら true
+</script>
+
+<div class="exhibition" id="exhibition"></div>
+<div class="number" id="number"></div>
+
+<main class="caption" id="caption">
+  <h1 class="work" id="work"></h1>
+  <p class="song" id="song"></p>
+  <p class="note" id="note"></p>
+
+  <div class="player">
+    <button id="play" type="button" aria-label="再生">
+      <svg id="icon" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>
+    </button>
+    <div class="track">
+      <div class="bar" id="bar" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div id="fill"></div></div>
+      <div class="time"><span id="cur">0:00</span><span id="dur">--:--</span></div>
+    </div>
+  </div>
+  <p class="status" id="status">ボタンを押すと曲が流れます</p>
+</main>
+
+<script>
+const PLAY = '<path d="M7 4.5v15l13-7.5z"/>';
+const PAUSE = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+const $ = (id) => document.getElementById(id);
+
+document.title = EXHIBITION_TITLE;
+$("exhibition").textContent = EXHIBITION_TITLE;
+
+const key = new URLSearchParams(location.search).get("w");
+const work = WORKS[key];
+
+if (!work) {
+  document.body.classList.add("missing");
+  $("work").textContent = "作品が見つかりません";
+  $("note").textContent = "絵の下にあるQRコードをもう一度読み込んでください。";
+  $("status").textContent = "";
+} else {
+  const total = Object.keys(WORKS).length;
+  $("number").textContent = `${key} / ${total}`;
+  $("work").textContent = work.title;
+  $("song").textContent = work.song;
+  $("note").textContent = work.note;
+  document.title = `${work.title}｜${EXHIBITION_TITLE}`;
+
+  const audio = new Audio(work.file);
+  audio.preload = "auto";
+  audio.loop = LOOP;
+
+  const fmt = (s) => isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}` : "--:--";
+  const setIcon = (playing) => {
+    $("icon").innerHTML = playing ? PAUSE : PLAY;
+    $("play").setAttribute("aria-label", playing ? "一時停止" : "再生");
+  };
+
+  $("play").addEventListener("click", () => {
+    if (audio.paused) {
+      $("status").textContent = "読み込んでいます…";
+      audio.play().catch(() => { $("status").textContent = "再生できませんでした。もう一度押してください。"; });
+    } else {
+      audio.pause();
+    }
+  });
+
+  audio.addEventListener("playing", () => { setIcon(true); $("status").textContent = "再生中"; });
+  audio.addEventListener("pause", () => { setIcon(false); if (!audio.ended) $("status").textContent = "一時停止中"; });
+  audio.addEventListener("ended", () => { setIcon(false); $("status").textContent = "曲が終わりました"; });
+  audio.addEventListener("loadedmetadata", () => { $("dur").textContent = fmt(audio.duration); });
+  audio.addEventListener("error", () => { $("status").textContent = "曲を読み込めませんでした。電波の良い場所でページを再読み込みしてください。"; });
+  audio.addEventListener("timeupdate", () => {
+    const p = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    $("fill").style.width = p + "%";
+    $("bar").setAttribute("aria-valuenow", Math.round(p));
+    $("cur").textContent = fmt(audio.currentTime);
+  });
+
+  // 再生位置の移動（タップ・ドラッグ）
+  const seek = (e) => {
+    if (!audio.duration) return;
+    const r = $("bar").getBoundingClientRect();
+    const x = Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1);
+    audio.currentTime = x * audio.duration;
+  };
+  let dragging = false;
+  $("bar").addEventListener("pointerdown", (e) => { dragging = true; $("bar").setPointerCapture(e.pointerId); seek(e); });
+  $("bar").addEventListener("pointermove", (e) => { if (dragging) seek(e); });
+  $("bar").addEventListener("pointerup", () => { dragging = false; });
+  $("bar").addEventListener("keydown", (e) => {
+    if (!audio.duration) return;
+    if (e.key === "ArrowRight") audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
+    if (e.key === "ArrowLeft") audio.currentTime = Math.max(audio.currentTime - 5, 0);
+  });
+}
+</script>
+</body>
+</html>
