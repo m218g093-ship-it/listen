@@ -52,7 +52,7 @@ const WORKS = {
     motion: "glimmer",
     ground: "#070B12", ink: "#C3D3EB", soft: "#7F93B2", accent: "#C3D3EB",
     palette: [["#19488C",25.6],["#2869C8",18.8],["#141E2D",16.0],["#1E6AD7",11.8],["#3764A5",9.9],["#C3D3EB",9.6],["#2D486E",8.3]],
-    textJa: "色の色相と音の音階を調整し、重ね合わせました。\nこの曲はGという一つの音で成り立っています。\n静止した完全な暗闇の中で、静かにきらめくような印象を与えます。",
+    textJa: "色の色相と音の音階を調整し、重ね合わせました。\nこの曲は\"G\"という一つの音で成り立っています。\n静止した完全な暗闇の中で、静かにきらめくような印象を与えます。",
     textEn: "The hue of the colors and the scale of the music were adjusted and layered together.\nThis piece is built on a single note: G.\nIt gives the impression of something quietly glimmering within a still, absolute darkness."
   },
   5: {
@@ -62,13 +62,15 @@ const WORKS = {
     motion: "still",   // 演出なし（完全に静止）
     ground: "#22150F", ink: "#EBDCC3", soft: "#B9A48A", accent: "#C85028",
     palette: [["#C85028",26.1],["#8C1919",25.7],["#5F2D6E",17.1],["#2D1C14",9.5],["#D7781E",9.3],["#3764A5",8.4],["#EBDCC3",3.9]],
-    textJa: "色と音のリズムを調整し、重ね合わせました。\n0.25秒間隔に音と間を設計しました。\n一定の歩幅で進むことで、誰かの鮮烈な記憶を遠くから覗くような曲に仕上がっています。",
+    textJa: "色と音のリズムを調整し、重ね合わせました。\n0.25秒間隔に音と間を設計しました。\n一定の歩幅で進むことで、誰かの鮮やかな記憶を遠くから覗くような曲に仕上がっています。",
     textEn: "The rhythm of both the colors and the music was adjusted and layered together.\nNotes and silences were designed at intervals of 0.25 seconds.\nMoving forward at a steady pace, the piece feels like gazing from afar into someone's vivid memory."
   }
 };
 const RHYTHM_STEP = 0.25; // rhythm の刻み（秒）
 // scale の光の粒の細かさ（画面の横幅を何マスに分けるか。大きいほど粒が小さい）
 const GLIMMER_COLUMNS = 140;
+// scale の光の粒が1秒間に出る数のめやす（小さいほど少ない）
+const GLIMMER_PER_SECOND = 4;
 </script>
 
 <style>
@@ -390,7 +392,7 @@ if (!W) {
 
   /* ---- 絵の反応（作品ごと） ---- */
   const img = $("painting"), scan = $("scan"), fx = $("fx"), g = fx.getContext("2d");
-  let level = 0, mix = 0, stars = [];
+  let level = 0, mix = 0, stars = [], lastT = 0, spawnAcc = 0;
 
   function sizeFx() {
     const d = Math.min(devicePixelRatio || 1, 2);
@@ -436,7 +438,10 @@ if (!W) {
         g.clearRect(0, 0, fx.width, fx.height);
         const cols = GLIMMER_COLUMNS;
         const cell = Math.max(1, Math.ceil(fx.width / cols));
-        if (playing && Math.random() < 0.15 + level * 0.9) {
+        const dt = lastT ? Math.min(t - lastT, 100) : 16;
+        if (playing) spawnAcc += GLIMMER_PER_SECOND * (0.4 + level * 1.2) * dt / 1000;
+        while (spawnAcc >= 1) {
+          spawnAcc -= 1;
           stars.push({ x: Math.floor(Math.random() * cols) * cell, y: Math.floor(Math.random() * (fx.height / cell)) * cell, life: 1 });
         }
         g.fillStyle = W.accent;
@@ -453,6 +458,7 @@ if (!W) {
         break;
       }
     }
+    lastT = t;
     if (!reduced) requestAnimationFrame(frame);
   }
   if (!reduced) requestAnimationFrame(frame);
