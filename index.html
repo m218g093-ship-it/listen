@@ -22,8 +22,8 @@ const WORKS = {
     motion: "brightness",
     ground: "#2A0B0B", ink: "#F1E6DA", soft: "#C9B4A4", accent: "#A59A89",
     palette: [["#A51D1D",25.6],["#A54221",18.8],["#A56749",16.0],["#A55C17",11.8],["#3764A5",9.9],["#A59A89",9.6],["#8E44A5",8.3]],
-    textJa: "色の明度と音の高さを調整し、重ね合わせました。\n曲は1オクターブの範囲内に音を収めることで、低く柔らかい、光がかすかに残る澄んだ印象に仕上がっています。",
-    textEn: "The brightness of the colors and the pitch of the music were adjusted and layered together.\nBy keeping every note within a single octave, the piece takes on a low, soft, and clear quality, with a faint glimmer of light still lingering."
+    textJa: "色の明度と音の高さを調整し、重ね合わせました。\n色の明るさを均一にし、曲は1オクターブの範囲内に音を収めることで、低く柔らかい、光がかすかに残る澄んだ印象に仕上がっています。",
+    textEn: "The brightness of the colors and the pitch of the music were adjusted and layered together.\nWith the brightness of the colors made uniform and every note of the music kept within a single octave, the piece takes on a low, soft, and clear quality, with a faint glimmer of light still lingering."
   },
   2: {
     title: "sound pressure", ja: "音圧",
@@ -32,8 +32,8 @@ const WORKS = {
     motion: "saturation",
     ground: "#1E110A", ink: "#F0DFC6", soft: "#B89878", accent: "#EBB04E",
     palette: [["#8C2F2F",25.6],["#C86443",18.8],["#2D190F",16.0],["#D78D48",11.8],["#3764A5",9.9],["#EBB04E",9.6],["#5D256E",8.3]],
-    textJa: "色の彩度と音の大きさを調整し、重ね合わせました。\n音の1粒1粒を一定のボリュームに収めています。暗がりに近い、影に沈むような篭った風合いを纏っています。",
-    textEn: "The saturation of the colors and the volume of the music were adjusted and layered together.\nEach individual note is held at a constant volume. The piece is cloaked in a muffled texture, close to darkness, as if sinking into shadow."
+    textJa: "色の彩度と音の大きさを調整し、重ね合わせました。\n色はすべて、同じ鮮やかさに揃えています。対応する曲は、音の1粒1粒を一定のボリュームに収めています。暗がりに近い、影に沈むような篭った風合いを纏っています。",
+    textEn: "The saturation of the colors and the volume of the music were adjusted and layered together.\nAll the colors are set to the same saturation, and in the corresponding music, each individual note is held at a constant volume. The piece is cloaked in a muffled texture, close to darkness, as if sinking into shadow."
   },
   3: {
     title: "original", ja: "",
@@ -42,8 +42,8 @@ const WORKS = {
     motion: "breath",
     ground: "#22150F", ink: "#EBDCC3", soft: "#B9A48A", accent: "#D7781E",
     palette: [["#8C1919",25.6],["#C85028",18.8],["#2D1C14",16.0],["#D7781E",11.8],["#3764A5",9.9],["#EBDCC3",9.6],["#5F2D6E",8.3]],
-    textJa: "色と曲はどちらも、オリジナルのものを重ね合わせました。\n音高、音圧、音階、そしてリズムが自由に混ざりあいながら、有機的にゆったりとした呼吸を続けています。",
-    textEn: "Both the colors and the music are presented in their original form, layered together.\nPitch, sound pressure, scale, and rhythm mingle freely, sustaining a slow, organic breath."
+    textJa: "色と曲はどちらも、オリジナルのものを重ね合わせました。\n色の明度、彩度、色相、リズムが、対する曲は音の音高、音圧、音階、そしてリズムが自由に混ざりあいながら、有機的にゆったりとした呼吸を続けています。",
+    textEn: "Both the colors and the music are presented in their original form, layered together.\nThe brightness, saturation, hue, and rhythm of the colors, and the pitch, sound pressure, scale, and rhythm of the music, mingle freely, sustaining a slow, organic breath."
   },
   4: {
     title: "scale", ja: "音階",
@@ -52,8 +52,8 @@ const WORKS = {
     motion: "glimmer",
     ground: "#070B12", ink: "#C3D3EB", soft: "#7F93B2", accent: "#C3D3EB",
     palette: [["#19488C",25.6],["#2869C8",18.8],["#141E2D",16.0],["#1E6AD7",11.8],["#3764A5",9.9],["#C3D3EB",9.6],["#2D486E",8.3]],
-    textJa: "色の色相と音の音階を調整し、重ね合わせました。\nこの曲は\"G\"という一つの音で成り立っています。\n静止した完全な暗闇の中で、静かにきらめくような印象を与えます。",
-    textEn: "The hue of the colors and the scale of the music were adjusted and layered together.\nThis piece is built on a single note: G.\nIt gives the impression of something quietly glimmering within a still, absolute darkness."
+    textJa: "色の色相と音の音階を調整し、重ね合わせました。\n色は一つの青に揃え、曲の方は\"G\"という一つの音で成り立っています。\n静止した完全な暗闇の中で、静かにきらめくような印象を与えます。",
+    textEn: "The hue of the colors and the scale of the music were adjusted and layered together.\nThe colors are unified into a single blue, while the music is built on a single note: G.\nIt gives the impression of something quietly glimmering within a still, absolute darkness."
   },
   5: {
     title: "rhythm", ja: "リズム",
@@ -62,8 +62,8 @@ const WORKS = {
     motion: "sweep",   // 再生位置に合わせて光の帯が左から右へ
     ground: "#22150F", ink: "#EBDCC3", soft: "#B9A48A", accent: "#C85028",
     palette: [["#C85028",26.1],["#8C1919",25.7],["#5F2D6E",17.1],["#2D1C14",9.5],["#D7781E",9.3],["#3764A5",8.4],["#EBDCC3",3.9]],
-    textJa: "色と音のリズムを調整し、重ね合わせました。\n0.25秒間隔に音と間を設計しました。\n一定の歩幅で進むことで、誰かの鮮やかな記憶を遠くから覗くような曲に仕上がっています。",
-    textEn: "The rhythm of both the colors and the music was adjusted and layered together.\nNotes and silences were designed at intervals of 0.25 seconds.\nMoving forward at a steady pace, the piece feels like gazing from afar into someone's vivid memory."
+    textJa: "色と音のリズムを調整し、重ね合わせました。\n色は左から右へ、切り替わりが一斉に起こるように並べ、曲は0.25秒間隔に音と間を設計しました。\n一定の歩幅で進むことで、誰かの鮮やかな記憶を遠くから覗くようなデザインに仕上がっています。",
+    textEn: "The rhythm of both the colors and the music was adjusted and layered together.\nThe colors are arranged so that, from left to right, they all change at once, while the music was designed with notes and silences at intervals of 0.25 seconds.\nMoving forward at a steady pace, the design feels like gazing from afar into someone's vivid memory."
   }
 };
 const RHYTHM_STEP = 0.25; // rhythm の刻み（秒）
