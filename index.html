@@ -78,6 +78,9 @@ const GLIMMER_PER_SECOND = 20;
 const BREATH_DEPTH = 0.5;
 // original の呼吸1回にかかる秒数（小さいほど速く、回数が増える）
 const BREATH_SECONDS = 0.86;
+// brightness / pitch の明るさの幅（再生中、いちばん暗いとき〜いちばん明るいとき。1 が元の明るさ）
+const BRIGHT_LOW = 0.35;
+const BRIGHT_HIGH = 1.15;
 </script>
 
 <style>
@@ -419,7 +422,7 @@ if (!W) {
 
   /* ---- 絵の反応（作品ごと） ---- */
   const img = $("painting"), scan = $("scan"), sweep = $("sweep"), fx = $("fx"), g = fx.getContext("2d");
-  let level = 0, mix = 0, stars = [], lastT = 0, spawnAcc = 0;
+  let level = 0, mix = 0, stars = [], lastT = 0, spawnAcc = 0, peak = 0.05;
 
   function sizeFx() {
     const d = Math.min(devicePixelRatio || 1, 2);
@@ -444,7 +447,11 @@ if (!W) {
 
     switch (W.motion) {
       case "brightness": {  // 光がかすかに残る：音に合わせて明るさが揺れる
-        const b = 1 - mix * (0.42 - level * 0.5);
+        // 曲の中でいちばん大きい音を基準にして、静かなとき〜大きいときを 0〜1 に広げる
+        peak = Math.max(level, peak * 0.998, 0.02);
+        const n = Math.min(level / peak, 1);
+        const target = BRIGHT_LOW + n * (BRIGHT_HIGH - BRIGHT_LOW);
+        const b = 1 + mix * (target - 1);
         img.style.filter = `brightness(${b.toFixed(3)})`;
         break;
       }
