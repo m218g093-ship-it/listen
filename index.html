@@ -74,6 +74,10 @@ const SWEEP_STRENGTH = 0.8;
 const GLIMMER_COLUMNS = 140;
 // scale の光の粒が1秒間に出る数のめやす（小さいほど少ない）
 const GLIMMER_PER_SECOND = 20;
+// original の呼吸の大きさ（1 が元の大きさ。大きいほど、ふくらみ・しぼみが大きい）
+const BREATH_DEPTH = 3;
+// original の呼吸1回にかかる秒数（小さいほど速く、回数が増える）
+const BREATH_SECONDS = 6;
 </script>
 
 <style>
@@ -451,8 +455,8 @@ if (!W) {
         break;
       }
       case "breath": {      // ゆったりとした呼吸：絵がふくらみ、しぼむ
-        const breath = Math.sin(t / 2600) * 0.5 + 0.5;
-        const sc = 1 + mix * (0.015 + breath * 0.025 + level * 0.012);
+        const breath = Math.sin(t / 1000 * 2 * Math.PI / BREATH_SECONDS) * 0.5 + 0.5;
+        const sc = 1 + mix * (0.015 + breath * 0.025 + level * 0.012) * BREATH_DEPTH;
         img.style.transform = `scale(${sc.toFixed(4)})`;
         break;
       }
