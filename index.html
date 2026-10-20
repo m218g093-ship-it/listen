@@ -16,7 +16,7 @@
 const SERIES = "Amaranthus";
 const WORKS = {
   1: {
-    title: "pitch", ja: "音高",
+    title: "pitch", color: "brightness", ja: "色　明度 ／ 音　音高",
     file: "audio/1.amaranthus_pitch.mp3",
     image: "images/1.amaranthus_brightness.png",
     motion: "brightness",
@@ -26,7 +26,7 @@ const WORKS = {
     textEn: "The brightness of the colors and the pitch of the music were adjusted and layered together.\nWith the brightness of the colors made uniform and every note of the music kept within a single octave, the piece takes on a low, soft, and clear quality, with a faint glimmer of light still lingering."
   },
   2: {
-    title: "sound pressure", ja: "音圧",
+    title: "sound pressure", color: "saturation", ja: "色　彩度 ／ 音　音圧",
     file: "audio/2.amaranthus_sound pressure.mp3",
     image: "images/2.amaranthus_saturation.png",
     motion: "saturation",
@@ -36,7 +36,7 @@ const WORKS = {
     textEn: "The saturation of the colors and the volume of the music were adjusted and layered together.\nAll the colors are set to the same saturation, and in the corresponding music, each individual note is held at a constant volume. The piece is cloaked in a muffled texture, close to darkness, as if sinking into shadow."
   },
   3: {
-    title: "original", ja: "",
+    title: "original", ja: "色　オリジナル ／ 音　オリジナル",
     file: "audio/3.amaranthus_original.mp3",
     image: "images/3.amaranthus_original.png",
     motion: "breath",
@@ -46,7 +46,7 @@ const WORKS = {
     textEn: "Both the colors and the music are presented in their original form, layered together.\nThe brightness, saturation, hue, and rhythm of the colors, and the pitch, sound pressure, scale, and rhythm of the music, mingle freely, sustaining a slow, organic breath."
   },
   4: {
-    title: "scale", ja: "音階",
+    title: "scale", color: "hue", ja: "色　色相 ／ 音　音階",
     file: "audio/4.amaranthus_scale.mp3",
     image: "images/4.amaranthus_hue.png",
     motion: "glimmer",
@@ -56,7 +56,7 @@ const WORKS = {
     textEn: "The hue of the colors and the scale of the music were adjusted and layered together.\nThe colors are unified into a single blue, while the music is built on a single note: G.\nIt gives the impression of something quietly glimmering within a still, absolute darkness."
   },
   5: {
-    title: "rhythm", ja: "リズム",
+    title: "rhythm", ja: "色　リズム ／ 音　リズム",
     file: "audio/5.amaranthus_rhythm.mp3",
     image: "images/5.amaranthus_rhythm.png",
     motion: "sweep",   // 再生位置に合わせて光の帯が左から右へ
@@ -159,8 +159,11 @@ const GLIMMER_PER_SECOND = 8;
     font-variation-settings: "opsz" 96;
   }
   .title.long { font-size: clamp(2.8rem, 15.5vw, 5.6rem); }
+  .title.pair { font-size: clamp(2.3rem, 11.5vw, 5rem); line-height: 1; }
+  .title .line { display: block; }
+  .title .sep { opacity: 0.45; }
   .ja {
-    font-size: 1rem; letter-spacing: 0.3em;
+    font-size: 0.95rem; letter-spacing: 0.12em;
     color: var(--soft);
     margin-top: 14px;
   }
@@ -306,14 +309,23 @@ if (!W) {
   root.setProperty("--accent", W.accent);
   document.querySelector('meta[name="viewport"]').insertAdjacentHTML("afterend", `<meta name="theme-color" content="${W.ground}">`);
 
-  document.title = `${W.title}｜${SERIES}`;
+  const fullTitle = W.color ? `${W.color} / ${W.title}` : W.title;
+  document.title = `${fullTitle}｜${SERIES}`;
   $("count").textContent = `${key} / ${Object.keys(WORKS).length}`;
-  $("title").textContent = W.title;
-  if (W.title.length > 9) $("title").classList.add("long");
+  if (W.color) {
+    const t = $("title"); t.textContent = ""; t.classList.add("pair");
+    const l1 = document.createElement("span"); l1.className = "line"; l1.textContent = W.color + " ";
+    const sep = document.createElement("span"); sep.className = "sep"; sep.textContent = "／"; l1.appendChild(sep);
+    const l2 = document.createElement("span"); l2.className = "line"; l2.textContent = W.title;
+    t.append(l1, l2);
+  } else {
+    $("title").textContent = W.title;
+    if (W.title.length > 9) $("title").classList.add("long");
+  }
   $("ja").textContent = W.ja;
   $("textJa").textContent = W.textJa;
   $("textEn").textContent = W.textEn;
-  $("colTitle").textContent = `${SERIES} — ${W.title}`;
+  $("colTitle").textContent = `${SERIES} — ${fullTitle}`;
   $("painting").src = W.image;
 
   // 7色の進行バーと色見本
